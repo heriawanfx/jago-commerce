@@ -14,7 +14,8 @@
 
         <div class="card-body">
             <p class="text-muted">We will send a link to reset your password</p>
-            <form method="POST">
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input id="email"
