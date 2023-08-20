@@ -18,12 +18,20 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->name('/');
 
 Route::middleware(['auth','verified'])->group(function () {
     Route::get(RouteServiceProvider::HOME, function () {
-        return view('pages.dashboard', ['type_menu' => '']);
-    })->can(AuthServiceProvider::ACCESS_DASHBOARD);
+        return view('pages.dashboard', ['type_menu' => 'dashboard']);
+    })->can(AuthServiceProvider::ACCESS_DASHBOARD)->name('dashboard');
+
+    Route::get('/profile', function() {
+        return view('pages.user.user-profile');
+    })->can(AuthServiceProvider::ACCESS_PROFILE)->name('profile');
+
+    Route::get('/user-management', function () {
+        return view('pages.user.user-management', ['type_menu' => 'user']);
+    })->can(AuthServiceProvider::ACCESS_USER_MANAGEMENT)->name('user-management');
 
     //Force logout to fix Expired after login
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);

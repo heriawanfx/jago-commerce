@@ -22,6 +22,14 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     public const ACCESS_DASHBOARD = 'access-dashboard';
+    public const ACCESS_USER_MANAGEMENT = 'access-user-management';
+    public const ACCESS_PROFILE = 'access-profile';
+
+    public static $accessFeatures = [
+        self::ACCESS_DASHBOARD => ['admin'],
+        self::ACCESS_USER_MANAGEMENT => ['admin'],
+        self::ACCESS_PROFILE => ['member','admin'],
+    ];
 
     /**
      * Register any authentication / authorization services.
@@ -29,12 +37,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // use Illuminate\Support\Facades\Gate;
-        Gate::define(self::ACCESS_DASHBOARD, function(User $user){
-
-          return in_array($user->role, ['admin'])
-            ? AccessResponse::allow()
-            : AccessResponse::deny('You must be an administrator');
-
-        });
+        foreach (self::$accessFeatures as $accessKey => $rolesValue) {
+            Gate::define($accessKey, function(User $user) use ($rolesValue){
+                return in_array($user->role, $rolesValue);
+            });
+        }
     }
 }
