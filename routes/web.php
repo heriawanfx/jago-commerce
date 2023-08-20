@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AuthServiceProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +21,12 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth','verified'])->group(function () {
-    Route::get('home', function () {
-        return view('pages.blank-page', ['type_menu' => '']);
-    });
+    Route::get(RouteServiceProvider::HOME, function () {
+        return view('pages.dashboard', ['type_menu' => '']);
+    })->can(AuthServiceProvider::ACCESS_DASHBOARD);
+
+    //Force logout to fix Expired after login
+    Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
 });
 
 /*
