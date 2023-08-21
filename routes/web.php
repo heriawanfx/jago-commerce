@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -21,27 +22,19 @@ Route::get('/', function () {
 })->name('/');
 
 Route::middleware(['auth','verified'])->group(function () {
-    Route::get(RouteServiceProvider::HOME, function () {
-        return view('pages.dashboard', ['type_menu' => 'dashboard']);
-    })->can(AuthServiceProvider::ACCESS_DASHBOARD)->name('dashboard');
+    
+    Route::get(RouteServiceProvider::HOME, fn () => view('pages.dashboard'))
+        ->can(AuthServiceProvider::ACCESS_DASHBOARD)
+        ->name('dashboard');
 
-    Route::get('/profile', function() {
-        return view('pages.user.user-profile');
-    })->can(AuthServiceProvider::ACCESS_PROFILE)->name('profile');
+    Route::get('/user/profile', fn () => view('pages.user.user-profile'))
+        ->can(AuthServiceProvider::ACCESS_PROFILE)
+        ->name('user-profile');
 
-    Route::get('/user-management', function () {
-        return view('pages.user.user-management', ['type_menu' => 'user']);
-    })->can(AuthServiceProvider::ACCESS_USER_MANAGEMENT)->name('user-management');
+    Route::get('/user/management', [UserController::class, 'index'])
+        ->can(AuthServiceProvider::ACCESS_USER_MANAGEMENT)
+        ->name('user-management');
 
     //Force logout to fix Expired after login
-    Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy']);
 });
-
-/*
-Route::get('/login', function () {
-    return view('auth.login');
-});
-Route::get('/register', function () {
-    return view('auth.register');
-});
- */
