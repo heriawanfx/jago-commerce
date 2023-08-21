@@ -56,25 +56,58 @@
                                 </div>
                                 {{ Auth::user()->bio }}
                             </div>
-                            <div class="card-footer text-center">
-                                <div class="font-weight-bold mb-2">Follow Ujang On</div>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-facebook mr-1">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-twitter mr-1">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-github mr-1">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-instagram">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
+                            
+                            <div class="card">
+                                <form method="post"
+                                    class="needs-validation"
+                                    novalidate="" action="{{ route('user-password.update') }}">
+    
+                                    @csrf
+                                    @method('PUT')
+                                    {{-- fortify put method --}}
+    
+                                    <div class="card-header">
+                                        <h4>Update Password</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label>Current Password</label>
+                                            <input type="password" name="current_password"
+                                                class="form-control @error('current_password','updatePassword') is-invalid @enderror">
+                                            @error('current_password','updatePassword')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+    
+                                        </div>
+                                        <div class="form-group">
+                                            <label>New Password</label>
+                                            <input type="password" name="password"
+                                                class="form-control @error('password','updatePassword') is-invalid @enderror">
+                                            @error('password','updatePassword')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password Confirmation</label>
+                                            <input type="password" name="password_confirmation"
+                                                class="form-control @error('password_confirmation','updatePassword') is-invalid @enderror">
+                                            @error('password_confirmation','updatePassword')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-right">
+                                        <button class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
                     <div class="col-12 col-md-12 col-lg-7">
