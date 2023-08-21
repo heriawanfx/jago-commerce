@@ -29,8 +29,12 @@ class UserSeeder extends Seeder
             'email' => 'member@member.com',
             'password' => Hash::make("member"),
             'role' => 'member',
-            'phone' => '08123456789',
+            'phone' => '08987654321',
             'bio' => 'A member',
         ])->create();
+
+        User::factory(10)->create();
+
+        // php artisan migrate:fresh --seed --seeder=UserSeeder
     }
 }
