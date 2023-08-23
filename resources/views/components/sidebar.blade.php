@@ -10,7 +10,7 @@
                     <span>Dashboard</span></a>
             </li>
             <li class="menu-header">User</li>
-            <li class="nav-item dropdown {{ Route::is('user*') ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ Route::is('user-management') ? 'active' : '' }}">
                 <a href="{{ route('user-management') }}" class="nav-link"><i class="fas fa-user"></i>
                     <span>User Management</span></a>
             </li>
