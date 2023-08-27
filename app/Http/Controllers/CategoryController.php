@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Policies\CategoryPolicy;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index','show']);
+        $this->authorizeResource(Category::class, 'category');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -36,8 +44,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category = $category->load('products'); 
-        return new CategoryResource($category);      
+        $category = $category->load('products');
+        return new CategoryResource($category);
     }
 
     /**
