@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MidtransCallbackController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -32,4 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/image/upload-multiple', [ImageController::class, 'uploadMultipleImage']);
     Route::post('/orders', [OrderController::class, 'order']);
+
+    Route::post('midtrans/notification/handling', [MidtransCallbackController::class, 'callback']);
 });

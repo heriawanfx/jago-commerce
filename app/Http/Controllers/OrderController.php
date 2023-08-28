@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Services\Midtrans\CreatePaymentUrlService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -33,8 +34,18 @@ class OrderController extends Controller
             $total_price += $item['quantity'] * $product->price;
         }
 
+        $midtrans = new CreatePaymentUrlService();
+        $orderWithUserItems = $order->load('user', 'orderItems');
+
+        //return $orderWithUserItems;
+
+        $paymentUrl = $midtrans->getPaymentUrl($orderWithUserItems);
+
+        //dd($paymentUrl);
+
         $order->update([
-            'total_price' => $total_price,
+            'total_price' => $total_price,            
+            'payment_url' => $paymentUrl,
         ]);
 
         return response()->json([
