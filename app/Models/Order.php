@@ -10,7 +10,12 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'number', 'total_price', ' paymanet_status', 'payment_url', 'delivery_address',
+        'number', 'total_price', ' paymanet_status', 
+        'payment_url', 'delivery_address',
         'user_id', 'seller_id',
+    ];
+
+    protected $casts = [
+        'total_price' => "decimal:2",
     ];
 }

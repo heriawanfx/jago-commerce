@@ -16,11 +16,10 @@ class OrderItemSeeder extends Seeder
      */
     public function run(): void
     {
-        $orders = Order::paginate(2);
+        $order = Order::find(1);
         $products = Product::paginate(5);
 
-        for ($i = 0; $i < 100; $i++) {
-            $order = $orders->random();
+        for ($i = 0; $i < 5; $i++) {
             $product = $products->random();
 
             OrderItem::factory()->create([
