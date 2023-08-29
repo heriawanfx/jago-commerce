@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/image/upload-multiple', [ImageController::class, 'uploadMultipleImage']);
     Route::post('/orders', [OrderController::class, 'order']);
-
-    Route::post('midtrans/notification/handling', [MidtransCallbackController::class, 'callback']);
 });
+
+
+Route::post('/midtrans/notification/handling', [MidtransCallbackController::class, 'callback']);
