@@ -8,12 +8,29 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->authorizeResource(Product::class, 'product');
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Product::paginate(10);
+        //$data = Product::paginate(10);
+
+        $category_id = $request->input('category_id');
+
+        $data = Product::query()
+            ->when($category_id, function ($query, $value) {
+                $query->where('category_id', '=', $value);
+            })
+            ->with('category')
+            ->paginate(10);
+
         return ProductResource::collection($data);
     }
 
@@ -40,7 +57,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product = $product->load('category','user');
+        $product = $product->load('category', 'user');
         return new ProductResource($product);
     }
 
