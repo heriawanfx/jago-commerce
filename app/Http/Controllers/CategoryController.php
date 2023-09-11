@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Policies\CategoryPolicy;
@@ -12,7 +13,7 @@ class CategoryController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['index','show']);
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
         $this->authorizeResource(Category::class, 'category');
     }
 
@@ -28,14 +29,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateCategoryRequest $request)
     {
-        $validatedRequests = $request->validate([
-                'name' => 'required|string|max:30',
-                'description' => 'required',
-            ]);
-
-        $newCategory = Category::create([...$validatedRequests]);
+        $newCategory = Category::create([...$request->validated()]);
         return response(content: $newCategory, status: 201);
     }
 
@@ -51,14 +47,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(StoreUpdateCategoryRequest $request, Category $category)
     {
-        $validatedRequests = $request->validate([
-            'name' => 'required|string|max:30',
-            'description' => 'required',
-        ]);
-
-        $update = $category->update($validatedRequests);
+        $update = $category->update($request->validated());
         return $update;
     }
 

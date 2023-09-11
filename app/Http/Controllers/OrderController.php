@@ -6,7 +6,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\Midtrans\CreatePaymentUrlService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -47,9 +51,9 @@ class OrderController extends Controller
             'total_price' => $total_price,            
             'payment_url' => $paymentUrl,
         ]);
-
+        
         return response()->json([
             'data' => $order,
-        ], status: 201);
+        ], status: 201, options: JSON_UNESCAPED_SLASHES);
     }
 }
