@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -23,12 +24,16 @@ class ProductController extends Controller
         //$data = Product::paginate(10);
 
         $category_id = $request->input('category_id');
+        $user_id = $request->input('user_id');
 
         $data = Product::query()
             ->when($category_id, function ($query, $value) {
                 $query->where('category_id', '=', $value);
             })
-            ->with('category')
+            ->when($user_id, function ($query, $value) {
+                $query->where('user_id', '=', $value);
+            })
+            ->with('category','user')
             ->paginate(10);
 
         return ProductResource::collection($data);
@@ -37,17 +42,12 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUpdateProductRequest $request)
     {
-        $validatedRequests = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required|string',
-            'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
-            'image_url' => 'required',
-            'category_id' => 'required',
+        $newCategory = Product::create([
+            $request->validated(), 
+            'user_id' => $request->user()->id,
         ]);
-
-        $newCategory = Product::create([...$validatedRequests, 'user_id' => 1]);
 
         return response(content: $newCategory, status: 201);
     }
@@ -64,17 +64,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreUpdateProductRequest $request, Product $product)
     {
-        $validatedRequests = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required|string',
-            'price' => 'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
-            'image_url' => 'required',
-            'category_id' => 'required',
-        ]);
-
-        $update = $product->update($validatedRequests);
+        $update = $product->update($request->validated());
         return $update;
     }
 
